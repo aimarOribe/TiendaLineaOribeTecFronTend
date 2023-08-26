@@ -1,0 +1,110 @@
+<!--breadcrumb-->
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="breadcrumb-title pe-3">Mantenedor</div>
+    <div class="ps-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+                <li class="breadcrumb-item">
+                    <a href="javascript:;"><i class="bx bx-cog"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Marca</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="ms-auto">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary px-5" (click)="abrirModal(modalMarca)"><i class='bx bx-user mr-1'></i>Agregar Marca</button>
+        </div>
+    </div>
+</div>
+<!--end breadcrumb-->
+
+<!-- Titulo -->
+<h6 class="mb-0 text-uppercase">Lista de Marcas</h6>
+<hr />
+<!-- Fin Titulo -->
+
+<!-- Tabla -->
+<div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabla" class="table align-middle mb-0" style="width:100%">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Descripcion</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let marca of listaMarcas">                                
+                                <td>{{ marca.descripcion }}</td>
+                                <td>
+                                    <span class="badge bg-gradient-quepal text-white shadow-sm w-75" *ngIf="marca.activo">Activo</span>
+                                    <span class="badge bg-gradient-bloody text-white shadow-sm w-75" *ngIf="!marca.activo">No Activo</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex order-actions">
+                                        <a class="dropdown-item btn-actualizar text-warning" (click)="editar(modalMarca, marca)">
+                                            <i class='bx bxs-edit'></i>
+                                        </a>
+                                        <a href="javascript:;" class="ms-3 text-danger" (click)="eliminar(marca)"><i class='bx bxs-trash'></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Tabla -->
+
+<!-- Modal -->
+<ng-template #modalMarca modal>
+    <div class="modal-content border-top border-0 border-4 border-primary">    
+        <form [formGroup]="formulario">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFormTitle">Marca</h5>
+                <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-4 border rounded">
+                    <input type="hidden" formControlName="idMarca" name="idMarca">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Descripcion</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent"><i class="lni lni-dropbox-original"></i></span>
+                                <input type="text" class="form-control border-start-0" formControlName="descripcion" name="descripcion" placeholder="Nombres" autocomplete="off" />
+                            </div>
+                            <div class="text-danger" *ngIf="formulario.get('descripcion')!.hasError('required') && formulario.get('descripcion')!.touched">
+                                La descripcion es obligatoria.
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label  class="form-label">Estado</label>
+                            <select class="form-select" formControlName="activo">
+                                <option value="1">Activo</option>
+                                <option value="0">No Activo</option>
+                            </select>
+                            <div class="text-danger" *ngIf="formulario.get('activo')!.hasError('required') && formulario.get('activo')!.touched">
+                                El estado es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+                <button type="button" class="btn btn-success" id="modalFormButton" (click)="guardar()" [disabled]="formulario.invalid" [hidden]="cargando">Guardar</button>
+                <button class="btn btn-primary" id="modalFormButtonLoading" type="button" disabled [hidden]="!cargando">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...
+                </button>
+            </div>
+        </form>       
+    </div>
+</ng-template>

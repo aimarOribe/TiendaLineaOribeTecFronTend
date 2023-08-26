@@ -1,0 +1,114 @@
+<div *ngIf="!forUserId" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+    <ng-container *ngFor="let usuario of usuarios">
+        <div class="col">
+            <div class="card radius-15">
+                <div class="card-body text-center">
+                    <div class="p-4 border radius-15">
+                        <img [src]="usuario.rutaImagen" width="110" height="110" class="rounded-circle shadow" alt="">
+                        <h5 class="mb-0 mt-5">{{usuario.nombres}} {{usuario.apellidos}}</h5>
+                        <p class="mb-3">{{usuario.rolDescripcion}}</p>
+                        <div class="d-grid"> 
+                            <button class="btn btn-outline-primary radius-15" (click)="seleccionarUsuario(usuario)">
+                                Conversar <i class="bx bx-send"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<div *ngIf="forUserId" class="chat-wrapper">
+    <div class="chat-sidebar">
+        <div class="chat-sidebar-header">
+            <div class="input-group input-group-sm"> <span class="input-group-text bg-transparent"><i class='bx bx-search'></i></span>
+                <input type="text" class="form-control" placeholder="People, groups, & messages"> <span class="input-group-text bg-transparent"><i class='bx bx-dialpad'></i></span>
+            </div>
+            <div class="chat-tab-menu mt-3">
+                <ul class="nav nav-pills nav-justified">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="pill" href="javascript:;">
+                            <div class="font-24"><i class='bx bx-conversation'></i>
+                            </div>
+                            <div><small>Chats</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="javascript:;">
+                            <div class="font-24"><i class='bx bx-phone'></i>
+                            </div>
+                            <div><small>Calls</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="javascript:;">
+                            <div class="font-24"><i class='bx bxs-contact'></i>
+                            </div>
+                            <div><small>Contacts</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="javascript:;">
+                            <div class="font-24"><i class='bx bx-bell'></i>
+                            </div>
+                            <div><small>Notifications</small>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div> 
+        </div>
+    </div>
+    <div class="chat-header d-flex align-items-center">
+        <button (click)="regresarAtras()" class="btn btn-sm btn-outline-dark">
+            <i class='bx bx-left-arrow'></i>
+        </button>
+        <div>
+            <h4 class=" font-weight-bold" style="padding: 10px 0px 0px 10px;">{{forUserName}}</h4>
+        </div>
+    </div>
+    <div class="chat-content">
+        <ng-container *ngFor="let message of messages">
+            <div *ngIf="message.forUserId != ofUserId">
+                <div class="chat-content-rightside">
+                    <div class="d-flex ms-auto">
+                        <div class="flex-grow-1 me-2">
+                            <p class="mb-0 chat-time text-end">{{message.nombres}} {{message.apellidos}}</p>
+                            <p class="chat-right-msg">{{message.texto}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="message.forUserId == ofUserId">
+                <div class="chat-content-leftside">
+                    <div class="d-flex">
+                        <img [src]="message.rutaImagen" width="48" height="48" class="rounded-circle" alt="" />
+                        <div class="flex-grow-1 ms-2">
+                            <p class="mb-0 chat-time">{{message.nombres}} {{message.apellidos}}</p>
+                            <p class="chat-left-msg">{{message.texto}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>                    
+        </ng-container>
+    </div>
+    <div class="chat-footer d-flex align-items-center">
+        <ng-container *ngIf="forUserId">
+                <div class="flex-grow-1 pe-2">
+                    <div class="input-group">	<span class="input-group-text"><i class='bx bx-message'></i></span>
+                        <input type="text" [(ngModel)]="message" class="form-control" name="message" placeholder="Menssage" autocomplete="off">
+                    </div>
+                </div>
+                <div class="chat-footer-menu">
+                    <a class="cursor-pointer" (click)="sendMessageToUser()"><i class='bx bxs-send'></i></a>
+                </div> 
+        </ng-container> 
+    </div>
+    <!--start chat overlay-->
+    <div class="overlay chat-toggle-btn-mobile"></div>
+    <!--end chat overlay-->
+</div>

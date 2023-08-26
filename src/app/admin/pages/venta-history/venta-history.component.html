@@ -1,0 +1,184 @@
+<!--breadcrumb-->
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="breadcrumb-title pe-3">Historial</div>
+    <div class="ps-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+                <li class="breadcrumb-item">
+                    <a href="javascript:;"><i class="bx bx-cog"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Venta</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!--end breadcrumb-->
+
+<div class="card">
+    <div class="card-body">
+        <form>
+            <div class="row align-items-end">               
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Fecha Inicio</label>
+                    <input class="result form-control" type="text" id="fechaInicio" name="fechaInicio" placeholder="Fecha Inicio...">
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Fecha Fin</label>
+                    <input class="result form-control" type="text" id="fechaFin" name="fechaFin" placeholder="Fecha Fin...">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Id Transacción</label>
+                    <input [(ngModel)]="idTransaccion" class="result form-control" type="text" name="idTransaccion"  placeholder="Id Transacción">
+                </div>
+                <div class="col-md-2 mb-3">
+                    <button class="btn btn-secondary mt-3 w-100">Exportar</button>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <button class="btn btn-primary mt-3 w-100" (click)="historial()">Buscar</button>
+                </div>         
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Titulo -->
+<h6 class="mb-0 text-uppercase">Lista de Ventas</h6>
+<hr />
+<!-- Fin Titulo -->
+<!-- Tabla -->
+<div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabla" class="table align-middle mb-0" style="width:100%">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fecha Venta</th>
+                                <th>IdTransaccion</th>
+                                <th>Cliente</th>
+                                <th>Contacto</th>
+                                <th>Telefono</th>
+                                <th>Total</th>
+                                <th>Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let venta of listaHistorialVentas">                             
+                                <td>{{ venta.fechaVenta }}</td>
+                                <td>{{ venta.idTransaccion }}</td>
+                                <td>{{ venta.descripcionCliente }}</td>
+                                <td>{{ venta.contacto }}</td>
+                                <td>{{ venta.telefono }}</td>
+                                <td>S/{{ venta.montoTotalTexto }}</td>
+                                <td>
+                                    <button data-bs-toggle="modal" data-bs-target="#modalVentaHistory" (click)="verMas(venta)" class="btn btn-sm btn-outline-primary w-100">
+                                        Ver Más
+                                    </button>
+                                </td>                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>            
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Tabla -->
+<!-- Modal -->
+<div class="modal fade" id="modalVentaHistory" tabindex="-1" aria-labelledby="modalFormTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-top border-0 border-4 border-primary">           
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFormTitle">Marca</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" *ngIf="detalleVentaHistory">
+                <div class="p-4 border rounded">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="fw-bold">Cliente</h4>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bolder">Nombres y Apellidos</label>
+                                            <input class="form-control" type="text" [value]="detalleVentaHistory.descripcionCliente" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bolder">Contacto</label>
+                                            <input class="form-control" type="text" [value]="detalleVentaHistory.contacto" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bolder">Telefono</label>
+                                            <input class="form-control" type="text" [value]="detalleVentaHistory.telefono" readonly>
+                                        </div>
+                                    </div>                                     
+                                </div>
+                            </div>                               
+                        </div>
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="fw-bold">Productos</h4>
+                                    <div class="row">                        
+                                        <div class="col-md-12">
+                                            <table id="tabla" class="table align-middle mb-0" style="width:100%">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Imagen</th>
+                                                        <th>Nombre</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let producto of detalleVentaHistory.detalleVenta">                             
+                                                        <td><img [src]="producto.rutaImagen" style="max-width:80px;" class="product-img-2"></td>
+                                                        <td>{{ producto.descripcionProducto }}</td>
+                                                        <td>{{ producto.cantidad }}</td>
+                                                        <td>{{ producto.precioTexto }}</td>
+                                                        <td>{{ producto.totalTexto }}</td>                
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>                         
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div *ngIf="ubicacionCliente" class="card-body">
+                                    <h4 class="fw-bold">Ubicación</h4>
+                                    <div class="row">     
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bolder">Departamento</label>
+                                            <input class="form-control" type="text" [value]="ubicacionCliente.descripcionDepartamento" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bolder">Provincia</label>
+                                            <input class="form-control" type="text" [value]="ubicacionCliente.descripcionProvincia" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bolder">Distrito</label>
+                                            <input class="form-control" type="text" [value]="ubicacionCliente.descripcionDistrito" readonly>
+                                        </div>
+                                        <div class="col-md-12 mt-3">
+                                            <label class="form-label fw-bolder">Dirección</label>
+                                            <input class="form-control" type="text" [value]="detalleVentaHistory.direccion" readonly>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div> 
+                        </div>   
+                    </div>
+                </div>              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

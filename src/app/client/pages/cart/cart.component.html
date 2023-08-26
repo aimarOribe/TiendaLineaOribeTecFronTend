@@ -1,0 +1,164 @@
+<div class="card radius-10">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card radius-10">
+                    <div class="card-body">
+                        <div class="d-none d-sm-flex align-items-center">
+                            <h4 class="fs-4">
+                                Total a Pagar: <strong><span>{{total$ | async | currency}}</span></strong>
+                            </h4>
+                            <div class="ms-auto">
+                                <a [routerLink]="['/']" class="btn btn-primary">Seguir Comprando</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="{total: total$ | async} as dataCart">
+                <ng-container *ngIf="dataCart.total">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div *ngIf="{total: total$ | async} as dataCart" class="card radius-10 p-0">
+                                <div *ngIf="dataCart.total" class="card-body">
+                                    <div class="card-title">
+                                        <h4>Productos</h4>
+                                    </div>
+                                    <hr>
+                                    <div class="card-body">
+                                        <div *ngFor="let item of cart$ | async" class="card radius-10">
+                                            <div class="card-body">
+                                                <div class="row align-items-center">         
+                                                    <div class="col-md-1 col-sm-3 col-12 pl-2 pt-1 pb-1">
+                                                        <img [src]="item.rutaImagen" style="max-width:80px;" class="product-img-2">
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 col-12 pl-2 pt-1 pb-1">
+                                                        <p class="card-text">{{item.nombre}}</p>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-3 col-12 pl-2 pt-1 pb-1">
+                                                        <p class="card-text">{{item.precio | currency}}</p>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 col-12 pl-2 pt-1 pb-1">
+                                                        <div class="btn-group w-100" role="group" aria-label="Basic example">                                                      
+                                                            <button type="button" class="btn btn-sm btn-dark" (click)="aumentarQuantity(item)">
+                                                                <i class="bx bx-plus"></i>
+                                                            </button>
+                                                            <input type="button" class="form-control form-control-sm radius-0 w-100" [(ngModel)]="item.cantidad" readonly>
+                                                            <button type="button" class="btn btn-sm btn-dark" (click)="disminuirQuantity(item)">
+                                                                <i class="bx bx-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-3 col-12 pr-2 pt-1 pb-1">
+                                                        <button type="button" class="btn btn-sm btn-danger w-100" (click)="eliminarProducto(item)">
+                                                            <i class="bx bx-trash"></i>
+                                                             Eliminar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div *ngIf="total$ | async" class="card radius-10">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <h4>Detalle de envio</h4>
+                                    </div>
+                                    <hr>
+                                    <form [formGroup]="formulario">
+                                        <div class="row align-items-center"> 
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Departamento</label>
+                                                <select class="form-select" formControlName="idDepartamento" (change)="departamentoSeleccionado()">
+                                                    <option value="">Elegir...</option>
+                                                    <option *ngFor="let departamento of listarDepartamentos" value={{departamento.idDepartamento}}>{{departamento.descripcion}}</option>
+                                                </select>
+                                                <div class="text-danger" *ngIf="formulario.get('idDepartamento')!.hasError('required') && formulario.get('idDepartamento')!.touched">
+                                                    El departamento es obligatorio.
+                                                </div>
+                                            </div>  
+                                            <div class="col-12 mb-3" *ngIf="idDepartamento">
+                                                <label class="form-label">Provincia</label>
+                                                <select class="form-select" formControlName="idProvincia" (change)="provinciaSeleccionada()">
+                                                    <option value="">Elegir...</option>
+                                                    <option *ngFor="let provincia of listarProvincias" value={{provincia.idProvincia}}>{{provincia.descripcion}}</option>
+                                                </select>
+                                                <div class="text-danger" *ngIf="formulario.get('idProvincia')!.hasError('required') && formulario.get('idProvincia')!.touched">
+                                                    La provincia es obligatoria.
+                                                </div>
+                                            </div>  
+                                            <div class="col-12 mb-3" *ngIf="idProvincia">
+                                                <label class="form-label">Provincia</label>
+                                                <select class="form-select" formControlName="idDistrito" (change)="distritoSeleccionado()">
+                                                    <option value="">Elegir...</option>
+                                                    <option *ngFor="let distrito of listarDistritos" value={{distrito.idDistrito}}>{{distrito.descripcion}}</option>
+                                                </select>
+                                                <div class="text-danger" *ngIf="formulario.get('idDistrito')!.hasError('required') && formulario.get('idDistrito')!.touched">
+                                                    El distrito es obligatorio.
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Nombre de Contacto</label>
+                                                <input type="text" class="form-control" formControlName="contacto">
+                                                <div class="text-danger" *ngIf="formulario.get('contacto')!.hasError('required') && formulario.get('contacto')!.touched">
+                                                    El contacto es obligatorio.
+                                                </div>
+                                            </div> 
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Dirección</label>
+                                                <input type="text" class="form-control" formControlName="direccion">
+                                                <div class="text-danger" *ngIf="formulario.get('direccion')!.hasError('required') && formulario.get('direccion')!.touched">
+                                                    La direccion es obligatoria.
+                                                </div>
+                                            </div>  
+                                            <div class="col-12 mb-3">
+                                                <label class="form-label">Telefono</label>
+                                                <input type="text" class="form-control" formControlName="telefono">
+                                                <div class="text-danger" *ngIf="formulario.get('telefono')!.hasError('required') && formulario.get('telefono')!.touched">
+                                                    El telefono es obligatorio.
+                                                </div>
+                                            </div>                                   
+                                        </div>
+                                        <div [hidden]="!formulario.invalid && !cargando">
+                                            <div class="alert border-0 border-start border-5 border-warning alert-dismissible fade show py-2">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="font-35 text-warning"><i class='bx bx-info-circle'></i>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0 text-warning">Aviso</h6>
+                                                        <div>Cuando todos los datos esten llenos por su persona se habilitará el boton de Procesar Pago de Paypal</div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        </div>    
+                                        <div [hidden]="formulario.invalid && !cargando">
+                                            <ngx-paypal [config]="payPalConfig"></ngx-paypal>    
+                                        </div>                                     
+                                        <button class="btn btn-primary w-100" id="modalFormButtonLoading" type="button" disabled [hidden]="!cargando">
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando pago...
+                                        </button>
+                                    </form>                     
+                                </div>            
+                            </div>             
+                        </div>
+                    </div>                  
+                </ng-container>
+                <ng-container *ngIf="!dataCart.total">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <img src="../../../../assets/client/images/carrito_vacio.png" [width]="250" class="img-fluid" alt="">
+                            <p class="text-center fs-4">Sin Productos en el Carrito</p>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>        
+    </div>
+</div>
+
+

@@ -1,0 +1,191 @@
+<!--breadcrumb-->
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="breadcrumb-title pe-3">Mantenedor</div>
+    <div class="ps-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+                <li class="breadcrumb-item">
+                    <a href="javascript:;"><i class="bx bx-cog"></i></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Producto</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="ms-auto">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary px-5" (click)="abrirModal(modalCategoria)"><i class='bx bx-user mr-1'></i>Agregar Producto</button>
+        </div>
+    </div>
+</div>
+<!--end breadcrumb-->
+
+<!-- Titulo -->
+<h6 class="mb-0 text-uppercase">Lista de Producto</h6>
+<hr />
+<!-- Fin Titulo -->
+
+<!-- Tabla -->
+<div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabla" class="table align-middle mb-0" style="width:100%">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Categoria</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <button *ngIf="borrando" class="btn btn-primary" type="button" disabled> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Estamos borrando el Producto, Espere Un Momento...</button>
+                            <tr *ngFor="let producto of listaProductos">                               
+                                <td>
+                                    <img *ngIf="producto.rutaImagen" [src]="producto.rutaImagen" style="max-width:80px;" class="product-img-2">
+                                </td>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.descripcionMarca }}</td>
+                                <td>{{ producto.descripcionCategoria }}</td>
+                                <td>{{ producto.precio }}</td>
+                                <td>{{ producto.stock }}</td>
+                                <td>
+                                    <span class="badge bg-gradient-quepal text-white shadow-sm w-75" *ngIf="producto.activo">Activo</span>
+                                    <span class="badge bg-gradient-bloody text-white shadow-sm w-75" *ngIf="!producto.activo">No Activo</span>
+                              </td>
+                              <td>
+                                <div class="d-flex order-actions">
+                                    <a class="dropdown-item btn-actualizar text-warning" (click)="editar(modalCategoria, producto)">
+                                        <i class='bx bxs-edit'></i>
+                                    </a>
+                                    <a href="javascript:;" class="ms-3 text-danger" (click)="eliminar(producto)"><i class='bx bxs-trash'></i></a>
+                                </div>
+                            </td>
+                            </tr>
+                          </tbody>
+                    </table>
+                </div>             
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Tabla -->
+
+<!-- Modal -->
+<ng-template #modalCategoria>
+    <div class="modal-content border-top border-0 border-4 border-primary">           
+        <form [formGroup]="formulario" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFormTitle">Producto</h5>
+                <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-4 border rounded">
+                    <input type="hidden" formControlName="idProducto" name="idUsuario">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Nombre</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-transparent"><i class="lni lni-layers"></i></span>
+                                                <textarea class="form-control border-start-0" formControlName="nombre" placeholder="Nombre" autocomplete="off" cols="30" rows="4"></textarea>
+                                            </div>
+                                            <div class="text-danger" *ngIf="formulario.get('nombre')!.hasError('required') && formulario.get('nombre')!.touched">
+                                                El nombre es obligatorio.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Descripción</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-transparent"><i class="lni lni-popup"></i></span>
+                                                <textarea class="form-control border-start-0" formControlName="decripcion" placeholder="Decripcion" autocomplete="off" cols="30" rows="4"></textarea>
+                                            </div>
+                                            <div class="text-danger" *ngIf="formulario.get('decripcion')!.hasError('required') && formulario.get('decripcion')!.touched">
+                                                La descripción es obligatoria.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Marca</label>
+                                            <select class="form-select" formControlName="idMarca">
+                                                <option *ngFor="let marca of listaMarcas" value="{{marca.idMarca}}">{{marca.descripcion}}</option>
+                                            </select>
+                                            <div class="text-danger" *ngIf="formulario.get('idMarca')!.hasError('required') && formulario.get('idMarca')!.touched">
+                                                La marca es obligatoria.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Categoria</label>
+                                            <select class="form-select" formControlName="idCategoria">
+                                                <option *ngFor="let categoria of listaCategorias" value="{{categoria.idCategoria}}">{{categoria.descripcion}}</option>
+                                            </select>
+                                            <div class="text-danger" *ngIf="formulario.get('idCategoria')!.hasError('required') && formulario.get('idCategoria')!.touched">
+                                                La categoria es obligatoria.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Precio</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-transparent"><i class="fadeIn animated bx bx-money"></i></span>
+                                                <input type="text" class="form-control border-start-0" formControlName="precio" placeholder="Precio" autocomplete="off" />
+                                            </div>
+                                            <div class="text-danger" *ngIf="formulario.get('precio')!.hasError('required') && formulario.get('precio')!.touched">
+                                                El precio es obligatorio.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Stock</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-transparent"><i class="fadeIn animated bx bx-ruler"></i></span>
+                                                <input type="number" class="form-control border-start-0" formControlName="stock" placeholder="Stock" autocomplete="off" />
+                                            </div>
+                                            <div class="text-danger" *ngIf="formulario.get('stock')!.hasError('required') && formulario.get('stock')!.touched">
+                                                El stock es obligatorio.
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label  class="form-label">Estado</label>
+                                            <select class="form-select" formControlName="activo">
+                                                <option value="1">Activo</option>
+                                                <option value="0">No Activo</option>
+                                            </select>
+                                            <div class="text-danger" *ngIf="formulario.get('activo')!.hasError('required') && formulario.get('activo')!.touched">
+                                                El estado es obligatorio.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label" for="txtImagen">Imagen</label>
+                                            <input class="form-control" (change)="onFileChange($event)" type="file" id="txtImagen" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <img id="imgProducto" [src]="imagenSeleccionada" style="max-width:200px;" class="rounded mx-auto d-block" alt="...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                               
+                    </div>
+                </div>     
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+                <button type="button" class="btn btn-success" id="modalFormButton" (click)="guardar()" [disabled]="formulario.invalid" [hidden]="cargando">Guardar</button>
+                <button class="btn btn-primary" id="modalFormButtonLoading" type="button" disabled [hidden]="!cargando">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...
+                </button>
+            </div>  
+        </form> 
+    </div>
+</ng-template>

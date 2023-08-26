@@ -1,0 +1,228 @@
+<!--start header -->
+<header>
+    <div class="topbar d-flex align-items-center">
+        <nav class="navbar navbar-expand">
+            <a [routerLink]="['/']">
+                <div class="topbar-logo-header">
+                    <div class="">
+                        <img src="../../../../assets/client/images/logo-icon.png" class="logo-icon" alt="logo icon">
+                    </div>
+                    <div class="">
+                        <h4 class="logo-text">TOribe</h4>
+                    </div>
+                </div>
+            </a>
+            <div class="mobile-toggle-menu"><i class='bx bx-menu'></i></div>
+            <div class="search-bar flex-grow-1">
+                <div class="position-relative search-bar-box">
+                    <input type="text" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+                    <span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
+                </div>
+            </div>
+            <div class="top-menu ms-auto">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item mobile-search-icon">
+                        <a class="nav-link">	
+                            <i class='bx bx-search'></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown dropdown-large" hidden>
+                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class='bx bx-category'></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <div class="row row-cols-3 g-3 p-3">
+                                <div class="col text-center">
+                                    <div class="app-box mx-auto bg-gradient-cosmic text-white"><i class='bx bx-group'></i>
+                                    </div>
+                                    <div class="app-title">Teams</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dropdown-large" hidden>
+                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count">7</span>
+                            <i class='bx bx-bell'></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="javascript:;">
+                                <div class="msg-header">
+                                    <p class="msg-header-title">Notifications</p>
+                                    <p class="msg-header-clear ms-auto">Marks all as read</p>
+                                </div>
+                            </a>
+                            <div class="header-notifications-list">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dropdown-large" hidden>
+                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
+                            <span class="alert-count">8</span>
+                            <i class='bx bx-comment'></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="javascript:;">
+                                <div class="msg-header">
+                                    <p class="msg-header-title">Messages</p>
+                                    <p class="msg-header-clear ms-auto">Marks all as read</p>
+                                </div>
+                            </a>
+                            <div class="header-message-list">
+                                <a class="dropdown-item" href="javascript:;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-online">
+                                            <img src="../../../../assets/client/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="msg-name">Daisy Anderson <span class="msg-time float-end">5 sec
+                                        ago</span></h6>
+                                            <p class="msg-info">The standard chunk of lorem</p>
+                                        </div>
+                                    </div>
+                                </a>                              
+                            </div>
+                            <a href="javascript:;">
+                                <div class="text-center msg-footer">View All Messages</div>
+                            </a>
+                        </div>
+                    </li>
+                    <ng-container *ngIf="!logueado">
+                        <li class="nav-item dropdown dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class='bx bx-user'></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <button class="dropdown-item" (click)="iniciarSesion()">
+                                    <span> Iniciar Sesión / Registrarse</span>
+                                </button>
+                            </div>
+                        </li>
+                    </ng-container>
+                    <ng-container *ngIf="{total: total$ | async, quantity :quantity$ | async} as dataCart">
+                        <li class="nav-item dropdown dropdown-item me-3" [hidden]="!logueado">
+                            <a [routerLink]="['/cart']" class="btn btn-dark radius-30">
+                                <i class='bx bx-cart'></i>Carrito 
+                                <span class="badge bg-secondary">
+                                    {{dataCart.quantity}}
+                                </span>
+                            </a>      
+                        </li>                  
+                    </ng-container>
+                    <ng-container *ngIf="logueado">
+                        <li class="nav-item dropdown dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{cliente?.nombres}}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <button class="dropdown-item">
+                                    <i class='bx bx-user'></i><span> Perfil</span>
+                                </button>
+                                <a [routerLink]="['/history']" class="dropdown-item">
+                                    <i class='bx bx-box'></i><span> Mis Compras</span>
+                                </a>
+                                <button class="dropdown-item" (click)="cerrarSesion()">
+                                    <i class='bx bx-log-out-circle'></i><span> Cerrar Sesión</span>
+                                </button>
+                            </div>
+                        </li>
+                    </ng-container>        
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+<!--end header -->
+<!--navigation-->
+<div class="nav-container primary-menu">
+    <div class="mobile-topbar-header">
+        <div>
+            <img src="../../../../assets/client/images/logo-icon.png" class="logo-icon" alt="logo icon">
+        </div>
+        <div>
+            <h4 class="logo-text">Rukada</h4>
+        </div>
+        <div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-xl w-100">
+        <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
+            <li class="nav-item dropdown">
+                <a href="javascript:;" class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+                    <div class="parent-icon">
+                        <i class='bx bx-home-circle'></i>
+                    </div>
+                    <div class="menu-title">
+                        Dashboard
+                    </div>
+                </a>
+                <ul class="dropdown-menu">
+                    <li> 
+                        <a class="dropdown-item" href="index.html">
+                            <i class="bx bx-right-arrow-alt"></i>
+                            Default
+                        </a>
+                    </li>
+                    <li> 
+                        <a class="dropdown-item" href="index2.html">
+                            <i class="bx bx-right-arrow-alt"></i>
+                            Alternate
+                        </a>
+                    </li>
+                    <li> 
+                        <a class="dropdown-item" href="index3.html">
+                            <i class="bx bx-right-arrow-alt"></i>
+                            Graphical
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="javascript:;" class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+                <div class="parent-icon"><i class='bx bx-cart'></i>
+                </div>
+                <div class="menu-title">eCommerce</div>
+              </a>
+              <ul class="dropdown-menu">
+                <li> <a class="dropdown-item" href="ecommerce-products.html"><i class="bx bx-right-arrow-alt"></i>Products</a>
+                </li>
+                <li> <a class="dropdown-item" href="ecommerce-products-details.html"><i class="bx bx-right-arrow-alt"></i>Product Details</a>
+                </li>
+                <li> <a class="dropdown-item" href="ecommerce-add-new-products.html"><i class="bx bx-right-arrow-alt"></i>Add New Products</a>
+                </li>
+                <li> <a class="dropdown-item" href="ecommerce-orders.html"><i class="bx bx-right-arrow-alt"></i>Orders</a>
+                </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a  class="nav-link" href="widgets.html">
+                    <div class="parent-icon"><i class='bx bx-cookie'></i>
+                    </div>
+                    <div class="menu-title">Widgets</div>
+                </a>
+             </li>
+             <li class="nav-item dropdown">
+              <a href="javascript:;" class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+                <div class="parent-icon"><i class="bx bx-category"></i>
+                </div>
+                <div class="menu-title">Application</div>
+             </a>
+              <ul class="dropdown-menu">
+                <li> <a class="dropdown-item" href="app-emailbox.html"><i class="bx bx-right-arrow-alt"></i>Email</a>
+                </li>
+                <li> <a class="dropdown-item" href="app-chat-box.html"><i class="bx bx-right-arrow-alt"></i>Chat Box</a>
+                </li>
+                <li> <a class="dropdown-item" href="app-file-manager.html"><i class="bx bx-right-arrow-alt"></i>File Manager</a>
+                </li>
+                <li> <a class="dropdown-item" href="app-contact-list.html"><i class="bx bx-right-arrow-alt"></i>Contatcs</a>
+                </li>
+                <li> <a class="dropdown-item" href="app-to-do.html"><i class="bx bx-right-arrow-alt"></i>Todo List</a>
+                </li>
+                <li> <a class="dropdown-item" href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i>Invoice</a>
+                </li>
+                <li> <a class="dropdown-item" href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Calendar</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+    </nav>
+</div>
+<!--end navigation-->
